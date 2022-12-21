@@ -38,9 +38,6 @@ pub async fn create_order(
     binance_config: Data<BinanceConfig>,
     telegram_config: Data<TelegramConfig>,
 ) -> Result<String, Error> {
-    let start_time = Instant::now();
-
-    log::info!("Start time: {:?}", start_time);
     let client = BinanceClient::new(binance_config.clone());
     let is_condition_met = connect_ws(&params, binance_config.wss_url.clone()).await;
 
