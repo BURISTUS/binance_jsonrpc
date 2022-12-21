@@ -1,0 +1,21 @@
+application:
+  port: 8000
+  host: "127.0.0.1"
+  base_url: "http://127.0.0.1:"
+
+database:
+  host: "localhost"
+  port: "5432"
+  username: "postgres"
+  password: "password"
+  database_name: "db"
+
+binance:
+  url: "https://testnet.binance.vision"
+  wss_url: "wss://testnet.binance.vision/stream?streams="
+  api_key: "SNYrSdc6Vqo4XiRm47cjEkgwnfPC7hPUOPUQqF8xkf4auSkcrEIKQPiAUldW09ii"
+  secret_key: "YDUWJCwkynZAy4HgorQj3zqqqT0GKYqF9MDs0Dw64Y7inZEZV4JmklhjKmrrrekT"
+
+telegram: 
+  bot_url: "https://api.telegram.org/bot5838862688:AAGX17S1rBWC19qmIUjDjMQBRuHfmCzItHI/sendMessage"
+  chat_id: "-788100163"
