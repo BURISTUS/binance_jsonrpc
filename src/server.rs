@@ -44,7 +44,7 @@ impl Application {
 
 pub struct ApplicationBaseUrl(pub String);
 
-// Server description
+// Server description.
 fn run(
     listener: TcpListener,
     telegram_config: TelegramConfig,

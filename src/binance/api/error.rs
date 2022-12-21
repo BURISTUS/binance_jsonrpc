@@ -4,7 +4,7 @@ use jsonrpc_v2::ErrorLike;
 use serde::{Deserialize, Serialize};
 
 /*
-    Binance response error description
+    Binance response error description.
 */
 
 #[derive(Debug, Deserialize, Serialize, Clone)]

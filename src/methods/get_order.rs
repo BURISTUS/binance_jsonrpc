@@ -5,7 +5,7 @@ use sqlx::PgPool;
 use crate::utils::{get_order_record, OrderQueryResult};
 
 /*
-    Method for returning created orders
+    Method for returning created orders.
 */
 
 #[derive(Debug, Deserialize)]
