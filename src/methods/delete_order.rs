@@ -4,7 +4,7 @@ use sqlx::PgPool;
 
 use crate::{
     binance::{
-        api::delete_order::{DeleteRequest, DeleteResponse},
+        api::delete_request::{DeleteRequest, DeleteResponse},
         client::{parse_response, BinanceClient},
     },
     utils::{
@@ -42,12 +42,12 @@ pub async fn delete_order(
 
     delete_order_request(response.order_id, &pg_pool).await?;
 
-    let order_posted_message = format!(
+    let order_removed_message = format!(
         "Your order has been deleted! Order id: {}. Symbol: {}",
         response.order_id, response.symbol
     );
-    send_message(order_posted_message, telegram_config.clone())
+    send_message(order_removed_message.clone(), telegram_config.clone())
         .await
         .unwrap();
-    Ok("ok".to_string())
+    Ok(order_removed_message)
 }

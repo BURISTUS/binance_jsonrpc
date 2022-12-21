@@ -1,8 +1,8 @@
 use crate::{
     binance::{
         api::{
-            create_order::{OrderRequest, OrderResponse},
-            get_order::{GetRequest, GetResponse},
+            create_request::{OrderRequest, OrderResponse},
+            get_request::{GetRequest, GetResponse},
             ticker::connect_ws,
             types::{OrderStatus, OrderType, Side, TimeInForce},
         },
@@ -18,7 +18,6 @@ use jsonrpc_v2::{Data, Error, Params};
 use serde::Deserialize;
 use sqlx::PgPool;
 use std::time::Duration;
-use std::time::Instant;
 
 #[derive(Debug, Deserialize)]
 pub struct OrderCreateParams {
@@ -99,7 +98,7 @@ pub async fn create_order(
             return Ok(order_complete_message);
         } else if response.status == OrderStatus::Canceled {
             return Ok(format!(
-                "Your order: {} with symbols: {} was {:?}",
+                "Your order: {} with symbols: {} has been {:?}",
                 response.order_id, response.symbol, response.status
             ));
         }

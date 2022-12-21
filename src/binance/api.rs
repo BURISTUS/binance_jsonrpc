@@ -3,10 +3,10 @@ use error::BinanceErrorResponse;
 use serde::{Deserialize, Serialize};
 use std::fmt::Debug;
 
-pub mod create_order;
-pub mod delete_order;
+pub mod create_request;
+pub mod delete_request;
 pub mod error;
-pub mod get_order;
+pub mod get_request;
 pub mod model;
 pub mod secret_key;
 pub mod ticker;
