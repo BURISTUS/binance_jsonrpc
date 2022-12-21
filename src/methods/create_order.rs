@@ -64,12 +64,13 @@ pub async fn create_order(
         }
     }?;
 
-    let order_posted_message = format!("Your order was post! Order id: {}", response.order_id);
+    let order_posted_message = format!(
+        "Your order with sybmol {} has been posted! Order id: {}",
+        response.symbol, response.order_id
+    );
     send_message(order_posted_message, telegram_config.clone())
         .await
         .unwrap();
-
-    // log::info!("{:?}", response);
 
     let item = create_order_record(params, response.order_id, &pool).await?;
 
@@ -90,9 +91,8 @@ pub async fn create_order(
 
         if response.status == OrderStatus::Filled {
             update_order_record(response.status, item, &pool).await?;
-
             let order_complete_message = format!(
-                "Your order with symbol {} is {:?}! Order id: {}",
+                "Your order with symbol {} has been  {:?}! Order id: {}",
                 response.symbol, response.status, response.order_id
             );
             send_message(order_complete_message.clone(), telegram_config.clone())

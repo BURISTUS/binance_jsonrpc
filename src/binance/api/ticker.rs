@@ -12,7 +12,7 @@ pub async fn connect_ws(params: &OrderCreateParams, wss_url: String) -> bool {
     let url = url::Url::parse(&connect_addr).unwrap();
 
     let (mut ws_stream, _) = connect_async(url).await.expect("Failed to connect");
-    println!("WebSocket handshake has been successfully completed");
+    log::info!("WebSocket handshake has been successfully completed");
     while let Some(msg) = ws_stream.next().await {
         match msg.unwrap() {
             Message::Text(s) => {

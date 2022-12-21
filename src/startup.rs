@@ -71,15 +71,4 @@ fn run(
     .run();
 
     Ok(server)
-    // let server = HttpServer::new(move || {
-    //     App::new()
-    //         .wrap(TracingLogger::default())
-    //         .route("/", web::get().to(json_rpc_handler))
-    //         .route("/health_check", web::get().to(health_check))
-    //         .app_data(web::JsonConfig::default().limit(4096))
-    //         .app_data(base_url.clone())
-    //         .app_data(db_pool.clone())
-    // })
-    // .listen(listener)?
-    // .run();
 }

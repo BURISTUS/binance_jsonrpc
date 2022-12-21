@@ -31,9 +31,3 @@ impl ErrorLike for BinanceErrorResponse {
         None
     }
 }
-
-// impl From<BinanceErrorResponse> for Error {
-//     fn from(t: BinanceErrorResponse) -> Self {
-//         Error::Provided { code: t.code, message: &t.msg }
-//     }
-// }

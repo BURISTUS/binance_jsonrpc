@@ -42,7 +42,10 @@ pub async fn delete_order(
 
     delete_order_request(response.order_id, &pg_pool).await?;
 
-    let order_posted_message = format!("Your order was post! Order id: {}", response.order_id);
+    let order_posted_message = format!(
+        "Your order has been deleted! Order id: {}. Symbol: {}",
+        response.order_id, response.symbol
+    );
     send_message(order_posted_message, telegram_config.clone())
         .await
         .unwrap();
