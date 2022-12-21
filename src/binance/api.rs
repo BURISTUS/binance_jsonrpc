@@ -10,10 +10,15 @@ pub mod get_request;
 pub mod model;
 pub mod secret_key;
 pub mod ticker;
+pub mod ticker_request;
 pub mod types;
 pub mod utils;
 
 pub type BinanceResponse<T> = core::result::Result<T, BinanceErrorResponse>;
+/*
+    Requests trait.
+*/
+
 
 pub trait BinanceRequest: Serialize {
     type Response: for<'de> BinanceOkResponse<'de>;

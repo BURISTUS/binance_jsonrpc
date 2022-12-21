@@ -5,6 +5,11 @@ use actix_web::http::Method;
 use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
 
+
+/*
+    Description of the create order request.
+*/
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OrderRequest {

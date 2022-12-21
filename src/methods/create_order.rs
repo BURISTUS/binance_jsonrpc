@@ -4,6 +4,7 @@ use crate::{
             create_request::{OrderRequest, OrderResponse},
             get_request::{GetRequest, GetResponse},
             ticker::connect_ws,
+            ticker_request::{TickerRequest, TickerResponse},
             types::{OrderStatus, OrderType, Side, TimeInForce},
         },
         client::{parse_response, BinanceClient},
@@ -19,6 +20,10 @@ use serde::Deserialize;
 use sqlx::PgPool;
 use std::time::Duration;
 
+/*
+    Method for creating new orders.
+*/
+
 #[derive(Debug, Deserialize)]
 pub struct OrderCreateParams {
     pub symbol: String,
@@ -28,7 +33,6 @@ pub struct OrderCreateParams {
     pub quantity: BigDecimal,
     pub side: Side,
     pub order_type: OrderType,
-    pub status: OrderStatus,
 }
 
 pub async fn create_order(
@@ -38,6 +42,20 @@ pub async fn create_order(
     telegram_config: Data<TelegramConfig>,
 ) -> Result<String, Error> {
     let client = BinanceClient::new(binance_config.clone());
+
+    // Checking the validity of the passed pair.
+    let ticker_request = TickerRequest::new(&params.symbol);
+    let res = client.request_future(ticker_request).await;
+
+    let _response: TickerResponse = match parse_response(res).await {
+        Ok(r) => Ok(r),
+        Err(err) => {
+            log::info!("BinanceError: {:?}", err);
+            Err(Error::from(err))
+        }
+    }?;
+
+    // Ws connection for price checking.
     let is_condition_met = connect_ws(&params, binance_config.wss_url.clone()).await;
 
     if !is_condition_met {
@@ -47,9 +65,11 @@ pub async fn create_order(
         });
     }
 
+
     let order_request = OrderRequest::new(&params);
     log::info!("{:?}", order_request);
 
+    // Creating order request.
     let signed_order_request = client.sign_unchecked(order_request);
     let res = client.request_future(signed_order_request).await;
     let response: OrderResponse = match parse_response(res).await {
@@ -64,6 +84,7 @@ pub async fn create_order(
         "Your order with sybmol {} has been posted! Order id: {}",
         response.symbol, response.order_id
     );
+    // Tg notification.
     send_message(order_posted_message, telegram_config.clone())
         .await
         .unwrap();
@@ -71,6 +92,7 @@ pub async fn create_order(
     let item = create_order_record(params, response.order_id, &pool).await?;
 
     loop {
+        // Order check for completion or cancellation.
         let get_order = GetRequest::new(&response.symbol, response.order_id);
         let signed_get_request = client.sign_unchecked(get_order);
         let res = client.request_future(signed_get_request.clone()).await;

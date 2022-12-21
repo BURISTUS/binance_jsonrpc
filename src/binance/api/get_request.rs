@@ -2,6 +2,10 @@ use super::{types::OrderStatus, utils, BinanceOkResponse, BinanceRequest, Binanc
 use actix_web::http::Method;
 use serde::{Deserialize, Serialize};
 
+/*
+    Description of the get order request
+*/
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct GetRequest {

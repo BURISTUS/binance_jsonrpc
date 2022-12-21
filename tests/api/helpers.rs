@@ -1,5 +1,5 @@
 use binance_jsonrpc::{
-    startup::Application,
+    server::Application,
     utils::{configuration::get_configuration, DatabaseConfig},
 };
 use reqwest::Response;
@@ -7,7 +7,7 @@ use serde::de::DeserializeOwned;
 use sqlx::{Connection, Executor, PgConnection, PgPool};
 use uuid::Uuid;
 
-use crate::types::RequestResult;
+use crate::types::RequestResponse;
 
 pub struct TestApp {
     pub address: String,
@@ -71,20 +71,21 @@ pub async fn configure_db(config: &DatabaseConfig) -> PgPool {
     connection_pool
 }
 
-pub async fn parse_response<R>(response: Response) -> RequestResult<R>
+pub async fn parse_response<R>(response: Response) -> RequestResponse<R>
 where
     R: DeserializeOwned + std::fmt::Debug,
 {
-    let json = response.json::<serde_json::Value>().await?;
-    let response: Result<R, serde_json::Error> = serde_json::from_value(json.clone());
+    let json = response.json::<serde_json::Value>().await.unwrap();
+    println!("{:?}", json);
 
+    let response: Result<R, serde_json::Error> = serde_json::from_value(json.clone());
     let parsed_response = match response {
         Ok(response) => Ok(response),
         Err(_) => {
-            let error_response = serde_json::from_value(json)?;
+            let error_response = serde_json::from_value(json).unwrap();
             Err(error_response)
         }
-    };
+    }?;
 
     Ok(parsed_response)
 }

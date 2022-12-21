@@ -3,6 +3,11 @@ use serde_json;
 
 use super::TelegramConfig;
 
+/*
+    Method for sending
+    notifications to telegram.
+*/
+
 pub async fn send_message(
     message: String,
     telegram_config: TelegramConfig,

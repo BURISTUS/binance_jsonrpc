@@ -3,6 +3,10 @@ use std::fmt::Display;
 use jsonrpc_v2::ErrorLike;
 use serde::{Deserialize, Serialize};
 
+/*
+    Binance response error description
+*/
+
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct BinanceErrorResponse {
     pub code: i64,

@@ -2,6 +2,11 @@ use super::{utils, BinanceSigner};
 use serde::{Deserialize, Serialize};
 use std::ops::{Deref, DerefMut};
 
+
+/*
+    Description of secret key.
+*/
+
 #[repr(transparent)]
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct SecretKey(String);

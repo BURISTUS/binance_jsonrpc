@@ -11,6 +11,7 @@ pub struct Application {
     server: Server,
 }
 
+// Configuration forwarding.
 impl Application {
     pub async fn build(
         app_configuration: ApplicationSettings,
@@ -43,6 +44,7 @@ impl Application {
 
 pub struct ApplicationBaseUrl(pub String);
 
+// Server description
 fn run(
     listener: TcpListener,
     telegram_config: TelegramConfig,

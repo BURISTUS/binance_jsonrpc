@@ -1,4 +1,4 @@
-use binance_jsonrpc::{startup::Application, utils::configuration::get_configuration};
+use binance_jsonrpc::{server::Application, utils::configuration::get_configuration};
 use env_logger::Env;
 use sqlx::PgPool;
 use std::fmt::{Debug, Display};
@@ -7,12 +7,13 @@ use tokio::task::JoinError;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     env_logger::Builder::from_env(Env::default().default_filter_or("debug")).init();
+
     let configuration = get_configuration().expect("Failed to read configuration.");
-    println!("{:?}", configuration);
     let connection_pool = PgPool::connect(&configuration.database.connection_string())
         .await
         .expect("Failed to read data from db");
-    println!("{}", &configuration.database.connection_string());
+
+    // App build
     let application = Application::build(configuration.clone(), connection_pool).await?;
     let application_task = tokio::spawn(application.run_until_stopped());
     tokio::select! {

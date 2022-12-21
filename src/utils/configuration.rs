@@ -2,6 +2,11 @@ use serde::Deserialize;
 
 use crate::binance::api::secret_key::SecretKey;
 
+/*
+    Reading a config file
+    using the config crate.
+*/
+
 #[derive(Deserialize, Clone, Debug)]
 pub struct ApplicationSettings {
     pub application: ApplicationConfig,
@@ -75,14 +80,7 @@ mod tests {
         assert_eq!(config.application.port, 8000);
         assert_eq!(config.database.host, "localhost");
         assert_eq!(config.database.port, "5432");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
-        // assert_eq!(config.application.host, "127.0.0.1");
+        assert_eq!(config.binance.url, "https://testnet.binance.vision");
+        assert_eq!(config.telegram.chat_id, "-788100163");
     }
 }

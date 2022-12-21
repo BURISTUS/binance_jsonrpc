@@ -2,6 +2,11 @@ use super::{utils, BinanceOkResponse, BinanceRequest, BinanceSignedRequest};
 use actix_web::http::Method;
 use serde::{Deserialize, Serialize};
 
+
+/*
+    Description of the delete active order request.
+*/
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct DeleteRequest {

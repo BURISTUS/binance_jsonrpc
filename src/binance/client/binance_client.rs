@@ -5,6 +5,11 @@ use crate::{
 use reqwest::{Client, Response};
 use serde::de::DeserializeOwned;
 
+/*
+    Binance client to send a request
+    and process a response.
+*/
+
 pub const HEADER_KEY: &str = "X-MBX-APIKEY";
 
 pub struct BinanceClient {
@@ -17,7 +22,7 @@ where
     R: DeserializeOwned + std::fmt::Debug,
 {
     let json = response.json::<serde_json::Value>().await.unwrap();
-
+    log::info!("{:?}", json);
     let response: Result<R, serde_json::Error> = serde_json::from_value(json.clone());
     let parsed_response = match response {
         Ok(response) => Ok(response),

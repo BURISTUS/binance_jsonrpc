@@ -1,5 +1,9 @@
 use serde::{de, Deserialize, Deserializer};
 
+/*
+    Wss data model.
+*/
+
 #[derive(Debug, Deserialize)]
 pub struct DepthStreamData {
     #[serde(deserialize_with = "de_float_from_str")]

@@ -1,6 +1,10 @@
 use serde::{Deserialize, Serialize};
 use sqlx;
 
+/*
+    Description of binance types;
+*/
+
 #[derive(Clone, Debug, Serialize, Deserialize, sqlx::Type)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Side {

@@ -6,6 +6,20 @@ use jsonrpc_v2::Error;
 use serde::{Deserialize, Serialize};
 use sqlx::{types::BigDecimal, PgPool};
 
+/*
+    Methods for interacting with
+    the databaseusing sqlx.
+*/
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct OrderQueryResult {
+    pub symbol: String,
+    pub order_id: i32,
+    pub side: Side,
+    pub order_status: OrderStatus,
+    pub price: Option<BigDecimal>,
+}
+
 pub async fn create_order_record(
     params: OrderCreateParams,
     order_id: i32,
@@ -14,8 +28,8 @@ pub async fn create_order_record(
     log::info!("Params is: {:?}", params);
     match sqlx::query!(
         r#"
-            INSERT INTO orders (symbol, condition_price, price, order_id, quantity, side, order_status, order_type, posted_at)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;
+            INSERT INTO orders (symbol, condition_price, price, order_id, quantity, side, order_type, posted_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id;
         "#,
         params.symbol,
         params.condition_price,
@@ -23,7 +37,6 @@ pub async fn create_order_record(
         order_id,
         params.quantity,
         params.side as Side,
-        params.status as OrderStatus,
         params.order_type as OrderType,
         chrono::Utc::now()
     )
@@ -67,7 +80,7 @@ pub async fn update_order_record(
     }
 }
 
-pub async fn delete_order_request(
+pub async fn delete_order_record(
     order_id: i32,
     pg_pool: &PgPool,
 ) -> Result<String, jsonrpc_v2::Error> {
@@ -88,16 +101,7 @@ pub async fn delete_order_request(
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct OrderQueryResult {
-    pub symbol: String,
-    pub order_id: i32,
-    pub side: Side,
-    pub order_status: OrderStatus,
-    pub price: Option<BigDecimal>,
-}
-
-pub async fn get_order_request(
+pub async fn get_order_record(
     order_id: i32,
     pg_pool: &PgPool,
 ) -> Result<OrderQueryResult, jsonrpc_v2::Error> {

@@ -8,10 +8,14 @@ use crate::{
         client::{parse_response, BinanceClient},
     },
     utils::{
-        configuration::BinanceConfig, delete_order_request, get_order_request, send_message,
+        configuration::BinanceConfig, delete_order_record, get_order_record, send_message,
         TelegramConfig,
     },
 };
+
+/*
+    Method for deliting active orders.
+*/
 
 #[derive(Debug, Deserialize)]
 pub struct OrderCreateParams {
@@ -24,9 +28,11 @@ pub async fn delete_order(
     binance_config: Data<BinanceConfig>,
     telegram_config: Data<TelegramConfig>,
 ) -> Result<String, Error> {
-    let client = BinanceClient::new(binance_config.clone());
-    let order = get_order_request(params.order_id, &pg_pool).await?;
 
+    let client = BinanceClient::new(binance_config.clone());
+    // Getting order record from db.
+    let order = get_order_record(params.order_id, &pg_pool).await?;
+    // Using data from order from db, to create new DeleteRequest.
     let delete_request = DeleteRequest::new(order.symbol, params.order_id);
     log::info!("{:?}", delete_request);
 
@@ -40,12 +46,13 @@ pub async fn delete_order(
         }
     }?;
 
-    delete_order_request(response.order_id, &pg_pool).await?;
+    delete_order_record(response.order_id, &pg_pool).await?;
 
     let order_removed_message = format!(
         "Your order has been deleted! Order id: {}. Symbol: {}",
         response.order_id, response.symbol
     );
+    // Tg notification.
     send_message(order_removed_message.clone(), telegram_config.clone())
         .await
         .unwrap();
